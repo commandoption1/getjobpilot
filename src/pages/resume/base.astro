@@ -1,0 +1,14 @@
+---
+import { env } from 'cloudflare:workers'
+
+import ResumeDocument from '../../components/ResumeDocument.astro'
+import { baseResume } from '../../core/resume'
+import { currentProfile } from '../../server/db'
+
+const { profile } = await currentProfile(env.DB)
+---
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8" /><meta name="robots" content="noindex" /><title>{profile.basics.name || 'Resume'}</title></head>
+  <body><ResumeDocument profile={profile} resume={baseResume(profile)} pdfHref="/resume/base.pdf" /></body>
+</html>

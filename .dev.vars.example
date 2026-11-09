@@ -1,0 +1,14 @@
+# Copy to .dev.vars for local development (`npm run preview`). Never commit .dev.vars.
+# Opens the app without Cloudflare Access. Only for your own computer.
+ALLOW_NO_ACCESS=true
+# Blank here so local runs skip Access even after you set it in wrangler.jsonc.
+ACCESS_AUD=
+ACCESS_TEAM_DOMAIN=
+# Any string of 24+ characters; the extension sends it as a Bearer token.
+EXTENSION_TOKEN=change-me-to-a-long-random-string
+# Optional. Leave out to use the free, no-AI features only.
+# ANTHROPIC_API_KEY=sk-ant-...
+# Optional, for the Telegram digest.
+# TELEGRAM_BOT_TOKEN=123456:ABC...
+# TELEGRAM_CHAT_ID=123456789
+APP_URL=http://localhost:8787

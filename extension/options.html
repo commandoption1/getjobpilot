@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head><meta charset="utf-8" /><title>JobPilot options</title>
+    <style>body { font: 14px system-ui, sans-serif; max-width: 520px; margin: 32px auto; } label { display: block; margin: 12px 0 4px; } input { width: 100%; padding: 6px; } button { margin-top: 16px; padding: 6px 14px; } #status { margin-top: 12px; }</style>
+  </head>
+  <body>
+    <h1>JobPilot</h1>
+    <label for="appUrl">Your JobPilot address</label>
+    <input id="appUrl" placeholder="https://jobpilot.yourname.workers.dev" />
+    <label for="token">Extension token (the EXTENSION_TOKEN secret)</label>
+    <input id="token" type="password" />
+    <details style="margin-top: 12px"><summary>Cloudflare Access service token (optional)</summary>
+      <p>Only if /api/ext/ is behind Access instead of a Bypass policy. See docs/extension.md.</p>
+      <label for="accessClientId">Client ID</label>
+      <input id="accessClientId" />
+      <label for="accessClientSecret">Client secret</label>
+      <input id="accessClientSecret" type="password" />
+    </details>
+    <button id="save">Save and allow access</button>
+    <p id="status"></p>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

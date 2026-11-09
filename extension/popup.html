@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head><meta charset="utf-8" />
+    <style>
+      body { font: 13px system-ui, sans-serif; width: 320px; margin: 12px; }
+      button { width: 100%; padding: 8px; margin: 4px 0; cursor: pointer; }
+      .primary { background: #2457d6; color: #fff; border: 1px solid #2457d6; border-radius: 6px; }
+      button:not(.primary) { background: #fff; border: 1px solid #ccc; border-radius: 6px; }
+      #job { margin: 6px 0 10px; padding: 8px; background: #f3f5f9; border-radius: 6px; }
+      #status { margin-top: 8px; white-space: pre-wrap; }
+      .muted { color: #666; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <strong>JobPilot</strong>
+    <div id="job" class="muted">Checking this page...</div>
+    <button id="fill" class="primary">Fill this application</button>
+    <button id="save">Save this job to my dashboard</button>
+    <button id="applied" hidden>I submitted it, mark as applied</button>
+    <button id="copyLetter" hidden>Copy cover letter</button>
+    <div id="status"></div>
+    <p class="muted">The extension never presses Submit. Check every field, attach your PDF, then submit yourself. <a href="#" id="options">Options</a></p>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+---
+import JobFeed from '../../components/JobFeed.vue'
+import App from '../../layouts/App.astro'
+
+const status = Astro.url.searchParams.get('status') ?? 'new'
+---
+<App title="Jobs">
+  <h1>Jobs</h1>
+  <JobFeed client:load initialStatus={status} />
+</App>

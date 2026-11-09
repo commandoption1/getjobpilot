@@ -1,0 +1,91 @@
+{
+  "basics": {
+    "name": "Alex Example",
+    "headline": "Full-stack developer, Vue and Node",
+    "email": "alex@example.com",
+    "phone": "",
+    "location": "Remote",
+    "website": "https://example.com",
+    "github": "https://github.com/example",
+    "linkedin": ""
+  },
+  "summary": "I build web apps with Vue and Node and run them on Cloudflare. Most of my work in the last few years has been for small startups.",
+  "experience": [
+    {
+      "id": "exp-acme",
+      "company": "Acme Pay",
+      "title": "Senior Frontend Developer",
+      "location": "Remote",
+      "engagement": "contract",
+      "start": "2023-02",
+      "end": "present",
+      "context": "Payments startup, 12 people",
+      "stack": ["vue", "typescript", "cloudflare workers"],
+      "bullets": [
+        { "id": "acme-1", "text": "Rebuilt the checkout in Vue 3, cutting page load from 4.1s to 1.3s", "skills": ["vue", "performance"], "tags": ["fintech"] },
+        { "id": "acme-2", "text": "Moved the API to Cloudflare Workers and D1, which lowered hosting costs by 60%", "skills": ["cloudflare workers", "d1"], "tags": [] },
+        { "id": "acme-3", "text": "Mentored two junior developers", "skills": [], "tags": ["leadership"] }
+      ]
+    },
+    {
+      "id": "exp-shoply",
+      "company": "Shoply",
+      "title": "Full-stack Developer",
+      "location": "Berlin",
+      "engagement": "employee",
+      "start": "2020-01",
+      "end": "2023-01",
+      "context": "",
+      "stack": ["node.js", "postgresql", "vue"],
+      "bullets": [
+        { "id": "shoply-1", "text": "Built the order export service in Node.js and PostgreSQL used by 300 merchants", "skills": ["node.js", "postgresql"], "tags": ["ecommerce"] }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-notes",
+      "name": "Open-source notes app",
+      "url": "https://example.com/notes",
+      "description": "A small offline-first notes app",
+      "stack": ["vue", "typescript"],
+      "bullets": [
+        { "id": "notes-1", "text": "Wrote an offline-first sync layer in TypeScript", "skills": ["typescript"], "tags": [] }
+      ]
+    }
+  ],
+  "skills": [
+    { "name": "Vue", "level": "strong", "years": 6, "aliases": ["vue.js", "vue 3"] },
+    { "name": "TypeScript", "level": "strong", "aliases": [] },
+    { "name": "Node.js", "level": "strong", "aliases": ["node"] },
+    { "name": "Cloudflare Workers", "level": "strong", "aliases": ["workers"] },
+    { "name": "PostgreSQL", "level": "working", "aliases": ["postgres"] }
+  ],
+  "education": [
+    { "id": "edu-1", "school": "Example University", "degree": "BSc", "field": "Computer Science", "start": "2014", "end": "2018" }
+  ],
+  "certifications": [],
+  "languages": [{ "name": "English", "level": "fluent" }],
+  "writingSamples": [
+    "Hi Sara, thanks for the call today. I looked at the checkout logs and the slow part is the address lookup, not the payment step. I can send a fix by Thursday."
+  ],
+  "preferences": {
+    "targetRoles": ["frontend developer", "full-stack developer"],
+    "engagements": ["contract", "freelance", "full-time"],
+    "currency": "USD",
+    "rateUnit": "hour",
+    "minRate": 40,
+    "targetRate": 60,
+    "minSalary": 0,
+    "remote": "remote-only",
+    "workRights": ["Germany", "EU"],
+    "targetCountries": [],
+    "avoidCountries": [],
+    "timezone": "UTC+1",
+    "overlapHours": 4,
+    "industries": ["fintech", "developer tools"],
+    "avoidIndustries": ["gambling"],
+    "companySizes": ["startup", "scaleup"],
+    "excludeKeywords": ["unpaid", "commission only"]
+  }
+}

@@ -1,0 +1,27 @@
+---
+import '../styles/app.css'
+
+const { title } = Astro.props as { title: string }
+const path = Astro.url.pathname
+const nav = [
+  ['/', 'Dashboard'], ['/queue', 'Today'], ['/jobs', 'Jobs'], ['/pipeline', 'Pipeline'], ['/outreach', 'Outreach'], ['/companies', 'Companies'],
+  ['/stats', 'Stats'], ['/profile', 'Profile'], ['/settings', 'Settings'],
+] as const
+const current = (href: string) => (href === '/' ? path === '/' : path.startsWith(href))
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} · JobPilot</title>
+  </head>
+  <body>
+    <header class="top">
+      <a class="brand" href="/">JobPilot</a>
+      <nav>{nav.map(([href, label]) => <a href={href} aria-current={current(href) ? 'page' : undefined}>{label}</a>)}</nav>
+    </header>
+    <main><slot /></main>
+  </body>
+</html>

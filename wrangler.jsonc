@@ -1,0 +1,40 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // The Worker's name. It becomes part of the free address: https://<name>.<your-subdomain>.workers.dev
+  "name": "jobpilot",
+  "main": "./src/worker.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "directory": "./dist/client", "binding": "ASSETS" },
+  "observability": { "enabled": true },
+  // Two crons, both fine on the Workers Free plan:
+  //   "15 */4 * * *" every 4 hours fetches the next window of job sources (see INGEST_FETCH_BUDGET, src/server/ingest.ts).
+  //   "0 * * * *"    every hour checks whether it is your digest hour (Settings, Daily routine) and sends the Telegram
+  //                  digest if so. Keep DIGEST_CRON in src/worker.ts the same as this entry.
+  "triggers": { "crons": ["15 */4 * * *", "0 * * * *"] },
+  "d1_databases": [
+    // Create the database with `npx wrangler d1 create jobpilot` and paste the database_id it prints here.
+    // The code reads this database as env.DB, so the binding name must stay "DB".
+    { "binding": "DB", "database_name": "jobpilot", "database_id": "REPLACE_WITH_YOUR_DATABASE_ID", "migrations_dir": "migrations" }
+  ],
+  // Secrets (set with `npx wrangler secret put NAME`, never put them in this file):
+  //   EXTENSION_TOKEN    - required for the browser extension: a long random string (`openssl rand -hex 32`)
+  //   ANTHROPIC_API_KEY  - optional: your own Claude API key, for AI tailoring, pasted posts and AI pitches
+  //   TELEGRAM_BOT_TOKEN - optional: from @BotFather, for the morning digest
+  //   TELEGRAM_CHAT_ID   - optional: your chat id with that bot (see docs/telegram.md)
+  "vars": {
+    // Cloudflare Access: your team domain (yourteam.cloudflareaccess.com) and the AUD tag of the Access application
+    // that protects this Worker. See docs/setup.md, step 6. Until both are set every request is refused, unless
+    // ALLOW_NO_ACCESS is "true" (only for local development: it leaves the app open to anyone).
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": "",
+    "ALLOW_NO_ACCESS": "false",
+    // Default Claude model. Settings, AI can override it. Only used when ANTHROPIC_API_KEY is set.
+    "CLAUDE_MODEL": "claude-opus-5-5",
+    // Outside requests one fetch run may make. Workers Free allows 50 per run, so 40 is safe and the sources are
+    // covered in turn over several runs. On Workers Paid (limit 10,000) set 2000 to read everything in one run.
+    "INGEST_FETCH_BUDGET": "40",
+    // Your app's address, for links in the Telegram digest, e.g. https://jobpilot.yourname.workers.dev
+    "APP_URL": ""
+  }
+}

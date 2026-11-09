@@ -1,0 +1,59 @@
+---
+import { env } from 'cloudflare:workers'
+
+import { scoreClass } from '../components/api'
+import App from '../layouts/App.astro'
+import { localDayStart } from '../core/outreach'
+import { countByStatus, currentProfile, doneSince, getSettings, lastIngestRuns, listJobs } from '../server/db'
+
+const settings = await getSettings(env.DB)
+const [counts, top, active, { id: profileId, profile }, runs, doneToday] = await Promise.all([
+  countByStatus(env.DB), listJobs(env.DB, { status: 'new', limit: 12 }), listJobs(env.DB, { status: 'active', limit: 200 }), currentProfile(env.DB), lastIngestRuns(env.DB),
+  doneSince(env.DB, localDayStart(settings.routine.utcOffset)),
+])
+const today = new Date().toISOString().slice(0, 10)
+const due = active.filter((j) => j.followUpAt && j.followUpAt <= today && ['applied', 'interview'].includes(j.status))
+const bullets = profile.experience.reduce((n, e) => n + e.bullets.length, 0)
+const setupSteps = [
+  { done: profileId > 0 && profile.experience.length > 0, text: 'Fill in your profile: jobs, bullets, skills', href: '/profile' },
+  { done: profile.preferences.minRate > 0 || profile.preferences.targetRoles.length > 0, text: 'Set your rate and target roles', href: '/profile' },
+  { done: runs.length > 0, text: 'Fetch jobs for the first time', href: '/jobs' },
+]
+---
+<App title="Dashboard">
+  <h1>Dashboard</h1>
+  {setupSteps.some((s) => !s.done) && (
+    <div class="panel">
+      <strong>Getting started</strong>
+      <ul>{setupSteps.map((s) => <li>{s.done ? 'Done: ' : ''}<a href={s.href}>{s.text}</a></li>)}</ul>
+    </div>
+  )}
+  <a class="panel" href="/queue" style="display: block; text-decoration: none; color: inherit">
+    <strong>Today:</strong> {doneToday.applied} of {settings.routine.applicationsPerDay} applications and {doneToday.pitched} of {settings.routine.pitchesPerDay} pitches done. <span style="color: var(--accent)">Open the queue</span>
+  </a>
+  <div class="grid">
+    <a class="panel" href="/jobs" style="text-decoration: none; color: inherit"><div class="muted small">New to review</div><div class="stat">{counts.new ?? 0}</div></a>
+    <a class="panel" href="/jobs?status=saved" style="text-decoration: none; color: inherit"><div class="muted small">Saved</div><div class="stat">{counts.saved ?? 0}</div></a>
+    <a class="panel" href="/pipeline" style="text-decoration: none; color: inherit"><div class="muted small">Applied</div><div class="stat">{counts.applied ?? 0}</div></a>
+    <a class="panel" href="/pipeline" style="text-decoration: none; color: inherit"><div class="muted small">Interviews</div><div class="stat">{counts.interview ?? 0}</div></a>
+    <a class="panel" href="/pipeline" style="text-decoration: none; color: inherit"><div class="muted small">Won</div><div class="stat">{counts.won ?? 0}</div></a>
+  </div>
+  {due.length > 0 && (
+    <div class="panel"><strong class="due">Follow up today</strong>
+      <ul>{due.map((j) => <li><a href={`/jobs/${j.id}`}>{j.title}</a> at {j.company}</li>)}</ul>
+    </div>
+  )}
+  <div class="panel list">
+    <div class="row" style="justify-content: space-between"><h2 style="margin: 0">Best new matches</h2><a href="/jobs">See all</a></div>
+    {top.length === 0 && <p class="muted">No new jobs yet. Open Jobs and press "Fetch new jobs now".</p>}
+    {top.map((j) => (
+      <div class="item">
+        <div class={`score ${scoreClass(j.score)}`}>{j.score ?? '-'}</div>
+        <div class="body"><a class="title" href={`/jobs/${j.id}`}>{j.title}</a> <span class="muted">· {j.company}</span>
+          <div class="small"><span class="chip">{j.engagement}</span>{j.remote && <span class="chip">remote</span>}<span class="chip">{j.source}</span></div>
+        </div>
+      </div>
+    ))}
+  </div>
+  <p class="small muted">Profile: {profile.experience.length} jobs, {bullets} bullets, {profile.skills.length} skills.</p>
+</App>

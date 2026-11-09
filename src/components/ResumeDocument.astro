@@ -1,0 +1,85 @@
+---
+// ATS-safe resume: one column, standard section names, real text, no tables, icons or images. Company, title and
+// dates come from the profile by id; only the bullets, headline, summary and skills come from the tailored version.
+import { formatMonth, type Profile } from '../core/profile'
+import type { TailoredResume } from '../core/resume'
+
+const { profile, resume, letter = false, pdfHref = '' } = Astro.props as { profile: Profile; resume: TailoredResume; letter?: boolean; pdfHref?: string }
+const b = profile.basics
+const contact = [b.location, b.email, b.phone, b.website, b.github, b.linkedin].filter(Boolean)
+const jobs = resume.experience.map((x) => ({ job: profile.experience.find((e) => e.id === x.experienceId), bullets: x.bullets })).filter((x) => x.job)
+const projects = resume.projects.map((x) => ({ p: profile.projects.find((e) => e.id === x.projectId), bullets: x.bullets })).filter((x) => x.p)
+const engagementNote = (e: string) => (e === 'contract' || e === 'freelance' ? ` (${e})` : '')
+---
+<div class="toolbar">{pdfHref ? <a class="download" href={pdfHref}>Download PDF</a> : <span>Approve this version on the job page to download it as a PDF.</span>}</div>
+<article class="resume">
+  <header>
+    <h1>{b.name}</h1>
+    {resume.headline && <p class="headline">{resume.headline}</p>}
+    <p class="contact">{contact.join(' | ')}</p>
+  </header>
+  {resume.summary && (<section><h2>Summary</h2><p>{resume.summary}</p></section>)}
+  {jobs.length > 0 && (
+    <section>
+      <h2>Experience</h2>
+      {jobs.map(({ job, bullets }) => (
+        <div class="entry">
+          <p class="entry-head"><span><strong>{job!.title}</strong>, {job!.company}{engagementNote(job!.engagement)}</span><span class="dates">{formatMonth(job!.start)} - {formatMonth(job!.end)}</span></p>
+          {(job!.location || job!.context) && <p class="entry-sub">{[job!.location, job!.context].filter(Boolean).join('. ')}</p>}
+          <ul>{bullets.map((x) => <li>{x.text}</li>)}</ul>
+        </div>
+      ))}
+    </section>
+  )}
+  {projects.length > 0 && (
+    <section>
+      <h2>Projects</h2>
+      {projects.map(({ p, bullets }) => (
+        <div class="entry">
+          <p class="entry-head"><span><strong>{p!.name}</strong>{p!.url && `, ${p!.url}`}</span></p>
+          {p!.description && <p class="entry-sub">{p!.description}</p>}
+          {bullets.length > 0 && <ul>{bullets.map((x) => <li>{x.text}</li>)}</ul>}
+        </div>
+      ))}
+    </section>
+  )}
+  {resume.skills.length > 0 && (<section><h2>Skills</h2><p>{resume.skills.join(', ')}</p></section>)}
+  {profile.education.length > 0 && (
+    <section><h2>Education</h2>
+      {profile.education.map((e) => <p class="entry-head"><span><strong>{[e.degree, e.field].filter(Boolean).join(', ') || e.school}</strong>{(e.degree || e.field) && `, ${e.school}`}</span><span class="dates">{[e.start, e.end].filter(Boolean).join(' - ')}</span></p>)}
+    </section>
+  )}
+  {profile.certifications.length > 0 && (<section><h2>Certifications</h2>{profile.certifications.map((c) => <p>{c.name}{c.issuer && `, ${c.issuer}`}{c.year && ` (${c.year})`}</p>)}</section>)}
+  {profile.languages.length > 0 && (<section><h2>Languages</h2><p>{profile.languages.map((l) => `${l.name}${l.level ? ` (${l.level})` : ''}`).join(', ')}</p></section>)}
+</article>
+{letter && resume.coverLetter && (
+  <article class="resume letter">
+    <header><h1>{b.name}</h1><p class="contact">{contact.join(' | ')}</p></header>
+    {resume.coverLetter.split(/\n{2,}/).map((para) => <p>{para}</p>)}
+  </article>
+)}
+<style is:global>
+  body { margin: 0; background: #e9e9e6; font-family: Calibri, Arial, Helvetica, sans-serif; color: #111; }
+  .toolbar { max-width: 8.5in; margin: 16px auto; font: 13px system-ui, sans-serif; color: #444; }
+  .toolbar .download { display: inline-block; background: #2f5bd3; color: #fff; text-decoration: none; padding: 7px 14px; border-radius: 6px; font-weight: 600; }
+  .resume { background: #fff; max-width: 8.5in; margin: 0 auto 24px; padding: 0.6in 0.7in; font-size: 10.5pt; line-height: 1.35; box-sizing: border-box; }
+  .resume h1 { font-size: 20pt; margin: 0; }
+  .resume .headline { font-size: 11.5pt; margin: 2px 0 0; }
+  .resume .contact { margin: 4px 0 0; font-size: 9.5pt; }
+  .resume h2 { font-size: 11pt; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid #333; margin: 14px 0 6px; padding-bottom: 2px; }
+  .resume p { margin: 0 0 4px; }
+  .resume .entry { margin-bottom: 8px; }
+  .resume .entry-head { display: flex; gap: 8px; }
+  .resume .dates { margin-left: auto; white-space: nowrap; }
+  .resume .entry-sub { font-style: italic; font-size: 9.5pt; }
+  .resume ul { margin: 2px 0 0; padding-left: 18px; }
+  .resume li { margin: 1px 0; }
+  .letter p { margin-bottom: 10px; font-size: 11pt; line-height: 1.45; }
+  @media print {
+    body { background: #fff; }
+    .toolbar { display: none; }
+    .resume { margin: 0; padding: 0; max-width: none; }
+    .letter { break-before: page; }
+    @page { margin: 0.55in 0.65in; }
+  }
+</style>

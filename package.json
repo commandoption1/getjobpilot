@@ -1,0 +1,33 @@
+{
+  "name": "jobpilot",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler types --strict-vars=false && astro dev",
+    "build": "wrangler types --strict-vars=false && astro build",
+    "preview": "npm run build && wrangler dev",
+    "typecheck": "wrangler types --strict-vars=false && astro check",
+    "test": "vitest run",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "deploy": "npm run build && wrangler deploy",
+    "extension:zip": "cd extension && zip -r ../jobpilot-extension.zip . -x '*.DS_Store'"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0",
+    "@astrojs/cloudflare": "^14.4.6",
+    "@astrojs/vue": "^7.1.2",
+    "astro": "^7.4.7",
+    "jose": "^6.2.15",
+    "pdf-lib": "^1.17.1",
+    "vue": "^3.5.45",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@types/node": "^26.6.6",
+    "typescript": "^6.0.3",
+    "vitest": "^5.1.0",
+    "wrangler": "^4.158.0"
+  }
+}

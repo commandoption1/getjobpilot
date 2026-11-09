@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "JobPilot",
+  "version": "1.0.0",
+  "description": "Save jobs to your JobPilot dashboard and fill application forms from your profile. You always press Submit yourself.",
+  "action": { "default_popup": "popup.html", "default_title": "JobPilot" },
+  "options_page": "options.html",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "optional_host_permissions": ["https://*/*", "http://localhost/*", "http://127.0.0.1/*"]
+}

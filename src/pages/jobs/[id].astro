@@ -1,0 +1,10 @@
+---
+import JobDetail from '../../components/JobDetail.vue'
+import App from '../../layouts/App.astro'
+
+const { id } = Astro.params
+---
+<App title="Job">
+  <p class="small"><a href="/jobs">Back to jobs</a></p>
+  <JobDetail client:load id={id!} />
+</App>

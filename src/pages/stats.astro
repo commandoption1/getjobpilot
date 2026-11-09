@@ -1,0 +1,39 @@
+---
+import { env } from 'cloudflare:workers'
+
+import App from '../layouts/App.astro'
+import { replyStats, scoreBand, type StatLine } from '../core/outreach'
+import { appliedRows, pitchCounts } from '../server/db'
+
+const days = Math.min(365, Math.max(1, Number(Astro.url.searchParams.get('days')) || 30))
+const since = new Date(Date.now() - days * 864e5).toISOString().replace(/\.\d{3}Z$/, 'Z')
+const [rows, pitches] = await Promise.all([appliedRows(env.DB, since), pitchCounts(env.DB, since)])
+const bySource = replyStats(rows, (r) => r.source)
+const byScore = replyStats(rows, (r) => scoreBand(r.score)).sort((a, b) => b.key.localeCompare(a.key))
+const replied = rows.filter((r) => ['interview', 'offer', 'won'].includes(r.status)).length
+const pct = (n: number) => `${Math.round(n * 100)}%`
+const tables: [string, StatLine[]][] = [['By source', bySource], ['By score', byScore]]
+---
+<App title="Stats">
+  <h1>Stats</h1>
+  <p class="small">
+    {[7, 30, 90].map((d) => <a href={`/stats?days=${d}`} style={d === days ? 'font-weight: 700; margin-right: 12px' : 'margin-right: 12px'}>Last {d} days</a>)}
+  </p>
+  <div class="grid">
+    <div class="panel"><div class="muted small">Applied</div><div class="stat">{rows.length}</div></div>
+    <div class="panel"><div class="muted small">Replies (interview or better)</div><div class="stat">{replied} <span class="small muted">{rows.length ? pct(replied / rows.length) : ''}</span></div></div>
+    <div class="panel"><div class="muted small">Pitches sent</div><div class="stat">{pitches.sent}</div></div>
+    <div class="panel"><div class="muted small">Pitch replies</div><div class="stat">{pitches.replied} <span class="small muted">{pitches.sent ? pct(pitches.replied / pitches.sent) : ''}</span></div></div>
+  </div>
+  {rows.length === 0 && <p class="muted">No applications in this period yet. Numbers show up here once you mark jobs as applied, and move them to Interview when someone answers.</p>}
+  {rows.length > 0 && tables.map(([title, lines]) => (
+    <div class="panel">
+      <h2 style="margin-top: 0">{title}</h2>
+      <table>
+        <thead><tr><th></th><th>Applied</th><th>Replies</th><th>Reply rate</th></tr></thead>
+        <tbody>{lines.map((l) => <tr><td>{l.key}</td><td>{l.applied}</td><td>{l.replied}</td><td>{pct(l.rate)}</td></tr>)}</tbody>
+      </table>
+    </div>
+  ))}
+  <p class="small muted">A reply counts when a job reaches Interview, Offer or Won. Move jobs along on the Pipeline page so these stay right. After two or three weeks, a source with many applications and no replies is a good one to turn off in Settings.</p>
+</App>

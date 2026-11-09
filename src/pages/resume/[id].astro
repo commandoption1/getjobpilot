@@ -1,0 +1,20 @@
+---
+import { env } from 'cloudflare:workers'
+
+import ResumeDocument from '../../components/ResumeDocument.astro'
+import { getJob, getTailored, profileVersion } from '../../server/db'
+
+const t = await getTailored(env.DB, Astro.params.id!)
+if (!t) return new Response('Not found', { status: 404 })
+const [version, job] = await Promise.all([profileVersion(env.DB, t.profileVersion), getJob(env.DB, t.jobId)])
+if (!version) return new Response('Profile version missing', { status: 404 })
+const name = version.profile.basics.name || 'Resume'
+---
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8" /><meta name="robots" content="noindex" /><title>{name} - {job?.company ?? ''} {job?.title ?? ''}</title></head>
+  <body>
+    {t.status !== 'approved' && <p style="max-width: 8.5in; margin: 16px auto; color: #a00; font: 13px system-ui">Draft: not approved yet. Approve it on the job page before sending.</p>}
+    <ResumeDocument profile={version.profile} resume={t.resume} letter pdfHref={t.status === 'approved' ? `/resume/${t.id}.pdf` : ''} />
+  </body>
+</html>
