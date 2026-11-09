@@ -98,13 +98,19 @@ Open your address. Cloudflare asks for your email, sends a code, and then shows 
 1. **Profile.** Fill in your jobs, bullets and skills, or click **Import / export JSON** and paste
    [examples/profile.example.json](../examples/profile.example.json) to see how it works, then replace it with your
    own facts. Preferences (rates, work type, countries, industries) drive the score. Save.
-2. **Settings.** The **Setup** panel at the top shows what is set and what's missing. Set your time zone (hours from
+2. **Settings.** The **Setup** panel at the top shows what is set and what's missing.
+
+   ![The Setup panel in Settings](screenshots/settings.png)
+
+   Set your time zone (hours from
    UTC) under Daily routine. Look through the job sources; add search words for your field (for example a
    Remotive search for "python", or a Himalayas source limited to one country).
 3. **Jobs.** Click **Fetch new jobs now**. The first run takes a minute or two; on the free plan it reads the sources
    in groups and keeps going until it has been through all of them.
 4. Open a job you like and click **Draft from my profile (no AI)**, or **Tailor my resume for this job** if you added
    a Claude key. Fix anything marked red, approve, and download the PDF.
+
+   ![A resume draft with every check passing](screenshots/tailored-resume.png)
 
 From now on the cron fetches new jobs every 4 hours by itself.
 

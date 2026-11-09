@@ -10,6 +10,19 @@ Everything can run on free plans. The Claude API is optional: bring your own key
 
 **Start here: [docs/setup.md](docs/setup.md)** (about 30 minutes, step by step).
 
+![Jobs scored against your profile](docs/screenshots/jobs.png)
+
+## Screenshots
+
+All screenshots use the [example profile](examples/profile.example.json) and made-up jobs.
+
+| | |
+| --- | --- |
+| ![Dashboard](docs/screenshots/dashboard.png) **Dashboard:** today's goal, pipeline counts and the best new matches. | ![Today](docs/screenshots/today.png) **Today:** the day's apply queue, thumbs-up first, with tailor, apply and mark-applied buttons. |
+| ![Why this score](docs/screenshots/job-score.png) **Job page:** why a job scored what it did, part by part, with your notes and follow-up date. | ![Tailored resume](docs/screenshots/tailored-resume.png) **Resume draft:** every check passes, keyword coverage, and each bullet shown against your original. |
+| ![Resume](docs/screenshots/resume.png) **Resume and cover letter:** a plain, ATS-friendly layout, downloadable as PDF. | ![Outreach](docs/screenshots/outreach.png) **Outreach:** startups without a job board, ready to pitch from your own saved template. |
+| ![Settings](docs/screenshots/settings.png) **Settings:** the Setup panel shows what's configured and what's missing. | |
+
 ## What it does
 
 | Area | Page | How |
