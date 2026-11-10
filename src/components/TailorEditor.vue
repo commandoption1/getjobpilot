@@ -89,7 +89,7 @@ const move = (list: any[], i: number, d: number) => { const j = i + d; if (j >= 
     <div class="row" style="justify-content: space-between">
       <div>
         <span class="chip" :class="record.status === 'approved' ? 'good' : ''">{{ record.status }}</span>
-        <span class="small muted">written by {{ record.model }} from profile version {{ record.profileVersion }}</span>
+        <span class="small muted">{{ record.model === 'none' ? 'drafted without AI' : `written by ${record.model}` }} from profile version {{ record.profileVersion }}</span>
       </div>
       <div class="row">
         <label class="row small" style="display: flex"><input v-model="showDiff" type="checkbox" /> Show changes</label>
